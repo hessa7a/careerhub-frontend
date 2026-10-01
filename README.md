@@ -1,16 +1,33 @@
-# React + Vite
+CareerHub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Description:
+CareerHub is a job and internship platform where companies can post opportunities and applicants can apply and track their application status.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## React Compiler
+User Stories:
+As a user, I want to sign up as either an applicant or a company so that I can access the correct features.
+As a user, I want to sign in so that I can access my account.
+As a user, I want to sign out so that I can securely leave my account.
+As an applicant, I want to browse available job and internship positions so that I can find opportunities.
+As an applicant, I want to view the details of a position before applying.
+As an applicant, I want to apply to a job or internship position.
+As an applicant, I want to view all of my submitted applications.
+As an applicant, I want to view the status of each application so that I can track my progress.
+As an applicant, I want to see whether my application is Applied, Reviewed, Interview, Got the Job, or Rejected.
+As an applicant, I want to withdraw an application if I am no longer interested in the position.
+As an applicant, I should not be able to create, edit, or delete job and internship positions.
+As a company, I want to create job and internship positions so that applicants can apply.
+As a company, I want to view all of the positions I have posted.
+As a company, I want to view the details of one of my positions.
+As a company, I want to edit my own job or internship positions.
+As a company, I want to delete my own job or internship positions.
+As a company, I want to view the applicants who have applied to my positions.
+As a company, I want to update an application's status to Reviewed, Interview, Got the Job, or Rejected.
+As a company, I should only be able to edit or delete positions that I created.
+As a company, I should not be able to apply to job or internship positions.
+As a user, I should only be able to access actions that are allowed for my account type.
+As a user, I should only be able to update or delete data that I am authorized to manage.
+As a guest user, I should not be able to create, update, or delete protected data.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
