@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 
 import { getJobById } from '../../services/jobService';
 import { createApplication } from '../../services/applicationService';
+import { UserContext } from '../../contexts/UserContext';
 
 const JobDetails = () => {
   const { jobId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -40,6 +43,21 @@ const JobDetails = () => {
     });
   };
 
+  const handleApplyClick = () => {
+    if (!user) {
+      navigate('/sign-in');
+      return;
+    }
+
+    if (user.role !== 'applicant') {
+      setMessage('Only applicants can apply for jobs');
+      return;
+    }
+
+    setMessage('');
+    setShowForm(true);
+  };
+
   const handleSubmit = async (evt) => {
     evt.preventDefault();
 
@@ -69,82 +87,120 @@ const JobDetails = () => {
   }
 
   return (
-    <main className="container py-5">
+    <main className="container-fluid p-4 min-vh-100">
 
-      <h1>{job.title}</h1>
-      <p>{job.location}</p>
-      <p>{job.job_type}</p>
+      <div className="col-md-8 col-lg-7 mx-auto">
 
-      <hr />
+        <div className="card shadow-sm border border-secondary-subtle">
+          <div className="card-body p-4">
 
-      <h4>Description</h4>
-      <p>{job.description}</p>
+            <div className="d-flex justify-content-between align-items-start mb-4">
 
-      <h4>Requirements</h4>
-      <p>{job.requirements}</p>
+              <div>
+                <h2 className="fw-bold mb-2">{job.title}</h2>
 
-      <hr />
+                <p className="text-muted mb-2">
+                  <i className="bi bi-geo-alt me-1"></i>
+                  {job.location}
+                </p>
 
-      {success && <p className="text-success">{success}</p>}
-      {message && <p className="text-danger">{message}</p>}
+                <span className="badge bg-primary-subtle text-primary me-2">
+                  {job.job_type}
+                </span>
 
-      {!showForm && (
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowForm(true)}
-        >
-          Apply Now
-        </button>
-      )}
+                <span
+                  className={`badge text-capitalize ${
+                    job.status === 'closed'
+                      ? 'bg-danger-subtle text-danger'
+                      : 'bg-success-subtle text-success'
+                  }`}
+                >
+                  {job.status}
+                </span>
+              </div>
 
-      {showForm && (
-        <div className="card p-4 mt-4">
+              {user?.role !== 'company' && job.status === 'active' && (
+                <button className="btn btn-primary" onClick={handleApplyClick}>
+                  Apply Now
+                </button>
+              )}
 
-          <h4 className="mb-3">Apply for this Job</h4>
-
-          <form onSubmit={handleSubmit}>
-
-            <div className="mb-3">
-              <label className="form-label">Message</label>
-
-              <textarea
-                className="form-control"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                required
-              />
             </div>
 
-            <div className="mb-3">
-              <label className="form-label">CV</label>
+            <hr />
 
-              <input
-                type="text"
-                className="form-control"
-                name="resume"
-                value={formData.resume}
-                onChange={handleChange}
-                placeholder="Add your CV link"
-                required
-              />
+            <div className="my-4">
+              <h4 className="fw-bold">Description</h4>
+              <p>{job.description}</p>
             </div>
 
-            <button type="submit" className="btn btn-primary me-2">
-              Submit Application
-            </button>
+            <div className="mb-4">
+              <h4 className="fw-bold">Requirements</h4>
+              <p>{job.requirements}</p>
+            </div>
 
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={() => setShowForm(false)}
-            >
-              Cancel
-            </button>
+            {success && <p className="text-success mb-0">{success}</p>}
+            {message && <p className="text-danger mb-0">{message}</p>}
 
-          </form>
-
+          </div>
         </div>
+
+      </div>
+
+      {showForm && user?.role === 'applicant' && (
+        <>
+          <div className="modal d-block" tabIndex="-1">
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+
+                <div className="modal-header">
+                  <h5 className="modal-title">Apply for {job.title}</h5>
+                  <button type="button" className="btn-close" onClick={() => setShowForm(false)}></button>
+                </div>
+
+                <form onSubmit={handleSubmit}>
+
+                  <div className="modal-body">
+
+                    <div className="mb-3">
+                      <label className="form-label">Message</label>
+                      <textarea
+                        className="form-control"
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="form-label">CV</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="resume"
+                        value={formData.resume}
+                        onChange={handleChange}
+                        placeholder="Add your CV link"
+                        required
+                      />
+                    </div>
+
+                  </div>
+
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-outline-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+                    <button type="submit" className="btn btn-primary">Submit Application</button>
+                  </div>
+
+                </form>
+
+              </div>
+            </div>
+          </div>
+
+          <div className="modal-backdrop fade show"></div>
+        </>
       )}
 
     </main>

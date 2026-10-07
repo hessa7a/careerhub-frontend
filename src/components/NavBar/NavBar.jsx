@@ -1,18 +1,21 @@
 import { useContext } from 'react';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import { UserContext } from '../../contexts/UserContext';
 import { removeToken } from '../../lib/helpers/jwt-helpers';
 
 const NavBar = () => {
 
-  const { user, setUser } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext);
+  const location = useLocation();
 
-  const handleSignOut = ()=>{
-    removeToken()
-    setUser(null)
-  }
+  const showSidebar = user || location.pathname.startsWith('/jobs');
 
-  if (user) {
+  const handleSignOut = () => {
+    removeToken();
+    setUser(null);
+  };
+
+  if (showSidebar) {
     return (
       <aside
         className="bg-white border-end min-vh-100 p-3 d-flex flex-column"
@@ -24,19 +27,37 @@ const NavBar = () => {
           CareerHub
         </Link>
 
-        <p className="mb-4">Hello {user.name}</p>
+        {user && (
+          <p className="mb-4">Hello {user.name}</p>
+        )}
 
         <nav className="nav flex-column gap-2">
 
-          <Link
-            className="nav-link"
-            to={user.role === 'company' ? '/company/dashboard' : '/applicant/dashboard'}
-          >
-            <i className="bi bi-house-door me-2"></i>
-            Dashboard
-          </Link>
+          {!user && (
+            <>
+              <Link className="nav-link" to="/">
+                <i className="bi bi-house-door me-2"></i>
+                Home
+              </Link>
 
-          {user.role === 'applicant' ? (
+              <Link className="nav-link" to="/jobs">
+                <i className="bi bi-search me-2"></i>
+                Browse Jobs
+              </Link>
+
+              <Link className="nav-link" to="/sign-in">
+                <i className="bi bi-box-arrow-in-right me-2"></i>
+                Sign In
+              </Link>
+
+              <Link className="nav-link" to="/sign-up">
+                <i className="bi bi-person-plus me-2"></i>
+                Sign Up
+              </Link>
+            </>
+          )}
+
+          {user?.role === 'applicant' && (
             <>
               <Link className="nav-link" to="/jobs">
                 <i className="bi bi-search me-2"></i>
@@ -48,8 +69,15 @@ const NavBar = () => {
                 My Applications
               </Link>
             </>
-          ) : (
+          )}
+
+          {user?.role === 'company' && (
             <>
+              <Link className="nav-link" to="/company/dashboard">
+                <i className="bi bi-house-door me-2"></i>
+                Dashboard
+              </Link>
+
               <Link className="nav-link" to="/company/jobs">
                 <i className="bi bi-briefcase me-2"></i>
                 Manage Jobs
@@ -64,14 +92,16 @@ const NavBar = () => {
 
         </nav>
 
-        <Link
-          className="nav-link text-danger mt-auto"
-          to="/"
-          onClick={handleSignOut}
-        >
-          <i className="bi bi-box-arrow-right me-2"></i>
-          Sign Out
-        </Link>
+        {user && (
+          <Link
+            className="nav-link text-danger mt-auto"
+            to="/"
+            onClick={handleSignOut}
+          >
+            <i className="bi bi-box-arrow-right me-2"></i>
+            Sign Out
+          </Link>
+        )}
 
       </aside>
     );

@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router';
+import { useEffect, useState } from 'react';
 
 import { getJobs } from '../../services/jobService';
+import Cards from '../Cards/Cards';
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
 
@@ -23,31 +25,61 @@ const Jobs = () => {
     loadJobs();
   }, []);
 
+  const filteredJobs = jobs.filter(job => {
+    const matchesSearch =
+      job.title.toLowerCase().includes(search.toLowerCase()) ||
+      job.location.toLowerCase().includes(search.toLowerCase());
+
+    const jobType = job.job_type.toLowerCase();
+
+    const matchesFilter =
+      filter === 'all' ||
+      (filter === 'jobs' && !jobType.includes('intern')) ||
+      (filter === 'internships' && jobType.includes('intern'));
+
+    return matchesSearch && matchesFilter && job.status === 'active';
+  });
+
   return (
-    <main className="container py-5">
-      <h1>Browse Jobs</h1>
-      <p>Find available jobs and internships.</p>
+    <main className="container-fluid p-4 min-vh-100">
 
-      {loading ? (
-        <p>Loading jobs...</p>
-      ) : message ? (
-        <p className="text-danger">{message}</p>
-      ) : jobs.length === 0 ? (
-        <p>No jobs available.</p>
-      ) : (
-        jobs.map((job) => (
-          <div key={job.id} className="card p-3 mb-3">
-            <h4>{job.title}</h4>
-            <p>{job.location}</p>
-            <p>{job.job_type}</p>
-            <p>{job.status}</p>
+      <div className="col-md-10 col-lg-8 mx-auto">
 
-            <Link to={`/jobs/${job.id}`} className="btn btn-primary">
-              View Details
-            </Link>
-          </div>
-        ))
-      )}
+        <div className="mb-4">
+          <h2 className="fw-bold">Job & Internship Positions</h2>
+          <p className="text-muted">Find the right opportunity for you.</p>
+        </div>
+
+        <div className="mb-4" style={{ maxWidth: '500px' }}>
+          <input
+            type="text"
+            className="form-control form-control-sm"
+            placeholder="Search by title or location..."
+            value={search}
+            onChange={(evt) => setSearch(evt.target.value)}
+          />
+        </div>
+
+        <div className="d-flex gap-2 mb-4">
+          <button className={`btn ${filter === 'all' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setFilter('all')}>All</button>
+          <button className={`btn ${filter === 'jobs' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setFilter('jobs')}>Jobs</button>
+          <button className={`btn ${filter === 'internships' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setFilter('internships')}>Internships</button>
+        </div>
+
+        {loading ? (
+          <p>Loading jobs...</p>
+        ) : message ? (
+          <p className="text-danger">{message}</p>
+        ) : filteredJobs.length === 0 ? (
+          <p>No jobs found.</p>
+        ) : (
+          filteredJobs.map(job => (
+            <Cards key={job.id} type="job" job={job} />
+          ))
+        )}
+
+      </div>
+
     </main>
   );
 };

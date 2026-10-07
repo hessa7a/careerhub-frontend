@@ -33,4 +33,57 @@ const createApplication = async (formData) => {
   return data;
 };
 
-export { getMyApplications, createApplication };
+const getJobApplications = async (jobId) => {
+  const res = await fetch(`${BASE_URL}/jobs/${jobId}/applications`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch job applications');
+  }
+
+  return res.json();
+};
+
+const getCompanyApplications = async () => {
+  const res = await fetch(`${BASE_URL}/applications/company`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch company applications');
+  }
+
+  return res.json();
+};
+
+const updateApplicationStatus = async (applicationId, status) => {
+  const res = await fetch(`${BASE_URL}/applications/${applicationId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.detail || 'Failed to update application');
+  }
+
+  return data;
+};
+
+export {
+  getMyApplications,
+  createApplication,
+  getJobApplications,
+  getCompanyApplications,
+  updateApplicationStatus
+};
