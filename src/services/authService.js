@@ -2,9 +2,6 @@
 
 import { parseToken, registerToken } from "../lib/helpers/jwt-helpers";
 
-// Use the `VITE_BACK_END_SERVER_URL` environment variable to set the base URL.
-// Note the `/auth` path added to the server URL that forms the base URL for
-// all the requests in this service.
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}`;
 
 const signUp = async (formData) => {
@@ -22,16 +19,13 @@ const signUp = async (formData) => {
     }
 
     if (data.token) {
-      // first save the raw token in local storage
-      registerToken(data.token)
-      // then extract the payload (second part of the token)
-      return parseToken(data.token)
+      registerToken(data.token);
+      return parseToken(data.token);
     }
 
     throw new Error('Invalid response from server');
   } catch (err) {
-    console.log(err);
-    throw new Error(err, { cause: err });
+    throw new Error(err.message);
   }
 };
 
@@ -50,16 +44,13 @@ const signIn = async (formData) => {
     }
 
     if (data.token) {
-      // first save the raw token in local storage
-      registerToken(data.token)
-
-      return parseToken(data.token)
+      registerToken(data.token);
+      return parseToken(data.token);
     }
 
     throw new Error('Invalid response from server');
   } catch (err) {
-    console.log(err);
-    throw new Error(err, { cause: err });
+    throw new Error(err.message);
   }
 };
 

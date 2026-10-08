@@ -39,11 +39,11 @@ const App = () => {
           <Route path='/sign-in' element={<SignInForm />} />
           <Route path='/jobs' element={<Jobs />} />
           <Route path='/jobs/:jobId' element={<JobDetails />} />
-          <Route path='/applicant/applications' element={user?.role === 'applicant' ? <MyApplications /> : <Navigate to={user ? '/' : '/sign-in'} replace />} />
-          <Route path='/company/dashboard' element={user?.role === 'company' ? <CompanyDashboard /> : <Navigate to={user ? '/' : '/sign-in'} replace />} />
-          <Route path='/company/jobs' element={user?.role === 'company' ? <ManageJobs /> : <Navigate to={user ? '/' : '/sign-in'} replace />} />
-          <Route path='/company/jobs/:jobId/applications' element={user?.role === 'company' ? <JobApplications /> : <Navigate to={user ? '/' : '/sign-in'} replace />} />
-          <Route path='/company/applications' element={user?.role === 'company' ? <CompanyApplications /> : <Navigate to={user ? '/' : '/sign-in'} replace />} />
+          <Route path='/applicant/applications' element={user?.role === 'applicant' ? <MyApplications /> : <Navigate to="/jobs" replace />} />
+          <Route path='/company/dashboard' element={user?.role === 'company' ? <CompanyDashboard /> : <Navigate to="/jobs" replace />} />
+          <Route path='/company/jobs' element={user?.role === 'company' ? <ManageJobs /> : <Navigate to="/jobs" replace />} />
+          <Route path='/company/jobs/:jobId/applications' element={user?.role === 'company' ? <JobApplications /> : <Navigate to="/jobs" replace />} />
+          <Route path='/company/applications' element={user?.role === 'company' ? <CompanyApplications /> : <Navigate to="/jobs" replace />} />
         </Routes>
       </div>
     </div>
