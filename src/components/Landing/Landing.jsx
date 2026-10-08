@@ -2,9 +2,12 @@ import { Link } from 'react-router';
 
 const Landing = () => {
   return (
-    <main className="container py-5">
+    <main
+      className="container-fluid bg-white d-flex align-items-center justify-content-center"
+      style={{ minHeight: 'calc(100vh - 70px)' }}
+    >
 
-      <div className="text-center py-5">
+      <div className="container text-center">
 
         <h1 className="fw-bold mb-3">
           Find Your Next Opportunity
@@ -14,7 +17,7 @@ const Landing = () => {
           Browse jobs and internships, apply to opportunities, and track your applications with CareerHub.
         </p>
 
-        <div className="d-flex justify-content-center gap-3">
+        <div className="d-flex justify-content-center gap-3 flex-wrap">
 
           <Link to="/jobs" className="btn btn-primary">
             Browse Jobs
