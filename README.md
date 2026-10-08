@@ -1,6 +1,6 @@
 # CareerHub
 
-![CareerHub Logo](./src/assets/logo.png)
+![CareerHub Logo](./assets/logo.png)
 
 
 ## Description
@@ -39,9 +39,9 @@ Coming soon.
 
 ### Planning Materials
 
-![CareerHub ERD](./src/assets/11.png)
-![CareerHub Wireframes](./src/assets/wireframes.png)
-![CareerHub Screenshot](./src/assets/Screenshot.png)
+![CareerHub ERD](./assets/11.png)
+![CareerHub Wireframes](./assets/wireframes.png)
+![CareerHub Screenshot](./assets/Screenshot.png)
 
 ### Back-End Repository
 
